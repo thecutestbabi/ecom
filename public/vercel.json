@@ -3,9 +3,5 @@
     "api/send-telegram.js": {
       "maxDuration": 10
     }
-  },
-  "env": {
-    "TELEGRAM_BOT_TOKEN": "@telegram_bot_token",
-    "TELEGRAM_CHAT_ID": "@telegram_chat_id"
   }
 }
