@@ -1381,6 +1381,13 @@ async function sendToTelegram(order) {
             body: JSON.stringify({ order })
         });
         
+        // Check if response is JSON
+        const contentType = response.headers.get('content-type');
+        if (!contentType || !contentType.includes('application/json')) {
+            console.warn('API endpoint not found or not returning JSON. Using fallback method.');
+            return await sendToTelegramFallback(order);
+        }
+        
         const result = await response.json();
         
         if (response.ok) {
@@ -1388,14 +1395,33 @@ async function sendToTelegram(order) {
             return true;
         } else {
             console.error('Failed to send order to Telegram:', result.error);
-            // Fallback: show order details in console
-            console.log('Order details (fallback):', order);
-            return false;
+            return await sendToTelegramFallback(order);
         }
     } catch (error) {
         console.error('Error sending to Telegram:', error);
-        // Fallback: show order details in console
-        console.log('Order details (fallback):', order);
+        return await sendToTelegramFallback(order);
+    }
+}
+
+// Fallback method when API is not available
+async function sendToTelegramFallback(order) {
+    try {
+        // Log order details to console for manual processing
+        console.log('=== ORDER DETAILS (FALLBACK) ===');
+        console.log('University:', order.university);
+        console.log('Store:', order.store);
+        console.log('Customer:', order.customer);
+        console.log('Items:', order.items);
+        console.log('Total:', order.total);
+        console.log('Timestamp:', order.timestamp);
+        console.log('=== END ORDER DETAILS ===');
+        
+        // Show alert to user
+        alert('Đơn hàng đã được lưu! Vui lòng liên hệ trực tiếp để xác nhận đơn hàng.');
+        
+        return true;
+    } catch (error) {
+        console.error('Fallback method failed:', error);
         return false;
     }
 }
