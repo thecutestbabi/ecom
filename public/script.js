@@ -1373,7 +1373,7 @@ document.getElementById('checkoutForm').addEventListener('submit', async functio
 // Send order to Telegram via API route
 async function sendToTelegram(order) {
     try {
-        const response = await fetch('/api/send-telegram', {
+        const response = await fetch('/api/send-telegram.js', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
