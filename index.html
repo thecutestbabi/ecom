@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Đặt Đồ Uống - Giao Hàng Tận Nơi</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Animated Background Elements -->
+    <div class="floating-icons">
+        <div class="floating-icon">☕</div>
+        <div class="floating-icon">🧋</div>
+        <div class="floating-icon">🍓</div>
+        <div class="floating-icon">🥤</div>
+        <div class="floating-icon">🍊</div>
+        <div class="floating-icon">🥑</div>
+        <div class="floating-icon">🍵</div>
+        <div class="floating-icon">🥭</div>
+        <div class="floating-icon">🍌</div>
+        <div class="floating-icon">🍉</div>
+    </div>
+
+    <div class="bouncing-beans">
+        <div class="bouncing-bean">☕</div>
+        <div class="bouncing-bean">☕</div>
+        <div class="bouncing-bean">☕</div>
+        <div class="bouncing-bean">☕</div>
+        <div class="bouncing-bean">☕</div>
+        <div class="bouncing-bean">☕</div>
+        <div class="bouncing-bean">☕</div>
+        <div class="bouncing-bean">☕</div>
+        <div class="bouncing-bean">☕</div>
+    </div>
+
+    <div class="floating-bubbles">
+        <div class="bubble"></div>
+        <div class="bubble"></div>
+        <div class="bubble"></div>
+        <div class="bubble"></div>
+        <div class="bubble"></div>
+        <div class="bubble"></div>
+        <div class="bubble"></div>
+        <div class="bubble"></div>
+        <div class="bubble"></div>
+    </div>
+
+    <div class="sparkles">
+        <div class="sparkle"></div>
+        <div class="sparkle"></div>
+        <div class="sparkle"></div>
+        <div class="sparkle"></div>
+        <div class="sparkle"></div>
+        <div class="sparkle"></div>
+        <div class="sparkle"></div>
+        <div class="sparkle"></div>
+    </div>
+
+    <div class="floating-hearts">
+        <div class="heart">💖</div>
+        <div class="heart">💕</div>
+        <div class="heart">💗</div>
+        <div class="heart">💖</div>
+        <div class="heart">💕</div>
+        <div class="heart">💗</div>
+        <div class="heart">💖</div>
+        <div class="heart">💕</div>
+        <div class="heart">💗</div>
+        <div class="heart">💖</div>
+    </div>
+
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <div class="logo">
+                <i class="fas fa-coffee"></i>
+                <h1>DrinkHub</h1>
+            </div>
+            <div class="cart-icon" onclick="toggleCart()">
+                <i class="fas fa-shopping-cart"></i>
+                <span class="cart-count" id="cartCount">0</span>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- University Selection -->
+            <section class="university-section" id="universitySection">
+                <h2>Chọn Trường Đại Học</h2>
+                <div class="university-grid" id="universityGrid">
+                    <!-- Universities will be populated by JavaScript -->
+                </div>
+            </section>
+
+            <!-- Store Selection -->
+            <section class="store-section" id="storeSection" style="display: none;">
+                <div class="store-header">
+                    <button class="back-btn" onclick="goBackToUniversities()">
+                        <i class="fas fa-arrow-left"></i> Quay lại
+                    </button>
+                    <h2>Chọn Cửa Hàng</h2>
+                </div>
+                <div class="store-grid" id="storeGrid">
+                    <!-- Stores will be populated by JavaScript -->
+                </div>
+            </section>
+
+            <!-- Menu Section -->
+            <section class="menu-section" id="menuSection" style="display: none;">
+                <div class="menu-header">
+                    <button class="back-btn" onclick="goBackToStores()">
+                        <i class="fas fa-arrow-left"></i> Quay lại
+                    </button>
+                    <h2 id="storeName">Tên Cửa Hàng</h2>
+                </div>
+                <div class="menu-categories">
+                    <button class="category-btn active" data-category="all">Tất cả</button>
+                    <button class="category-btn" data-category="coffee">Cà phê</button>
+                    <button class="category-btn" data-category="tea">Trà</button>
+                    <button class="category-btn" data-category="smoothie">Sinh tố</button>
+                    <button class="category-btn" data-category="juice">Nước ép</button>
+                </div>
+                <div class="menu-grid" id="menuGrid">
+                    <!-- Menu items will be populated by JavaScript -->
+                </div>
+            </section>
+        </main>
+
+        <!-- Cart Sidebar -->
+        <div class="cart-sidebar" id="cartSidebar">
+            <div class="cart-header">
+                <h3>Giỏ hàng</h3>
+                <button class="close-cart" onclick="toggleCart()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="cart-items" id="cartItems">
+                <!-- Cart items will be populated by JavaScript -->
+            </div>
+            <div class="cart-footer">
+                <div class="cart-total">
+                    <span>Tổng cộng:</span>
+                    <span id="cartTotal">0 ₫</span>
+                </div>
+                <button class="checkout-btn" onclick="showCheckout()">Thanh toán</button>
+            </div>
+        </div>
+
+        <!-- Checkout Modal -->
+        <div class="modal" id="checkoutModal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3>Thông tin đặt hàng</h3>
+                    <button class="close-modal" onclick="closeCheckout()">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                <form id="checkoutForm">
+                    <div class="form-group">
+                        <label for="customerName">Tên khách hàng:</label>
+                        <input type="text" id="customerName" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="customerPhone">Số điện thoại:</label>
+                        <input type="tel" id="customerPhone" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="deliveryAddress">Địa chỉ giao hàng:</label>
+                        <textarea id="deliveryAddress" rows="3" required></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="notes">Ghi chú thêm:</label>
+                        <textarea id="notes" rows="2"></textarea>
+                    </div>
+                    <div class="form-actions">
+                        <button type="button" class="cancel-btn" onclick="closeCheckout()">Hủy</button>
+                        <button type="submit" class="submit-btn">Đặt hàng</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Success Modal -->
+        <div class="modal" id="successModal">
+            <div class="modal-content success-content">
+                <div class="success-icon">
+                    <i class="fas fa-check-circle"></i>
+                </div>
+                <h3>Đặt hàng thành công!</h3>
+                <p>Thông tin đơn hàng đã được gửi. Chúng tôi sẽ liên hệ với bạn sớm nhất.</p>
+                <button class="ok-btn" onclick="closeSuccess()">OK</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
