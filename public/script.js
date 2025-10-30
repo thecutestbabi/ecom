@@ -2266,7 +2266,7 @@ document.getElementById('checkoutForm').addEventListener('submit', async functio
     // Show success modal
     document.getElementById('successModal').classList.add('show');
     // Trigger fireworks effect (10s)
-    startFireworks(15000);
+    startFireworks(35000);
     
     // Show additional info if Telegram failed
     if (!telegramSuccess) {
