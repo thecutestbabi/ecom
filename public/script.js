@@ -63,17 +63,117 @@ const drinkImages = {
     'default-coffee': 'https://images.unsplash.com/photo-1509042239860-f550ce710b93?w=400&h=400&fit=crop',
     'default-tea': 'https://images.unsplash.com/photo-1558160074-4d7d8bdf4256?w=400&h=400&fit=crop',
     'default-smoothie': 'https://images.unsplash.com/photo-1505252585461-04db1eb84625?w=400&h=400&fit=crop',
-    'default-juice': 'https://images.unsplash.com/photo-1600271886742-f049cd451bba?w=400&h=400&fit=crop'
+    'default-juice': 'https://images.unsplash.com/photo-1600271886742-f049cd451bba?w=400&h=400&fit=crop',
+    // Food - Đồ ăn (mặc định)
+    'default-food': 'https://images.unsplash.com/photo-1540189549336-e6e99c3679fe?w=400&h=400&fit=crop',
+    // Food images (tên món -> ảnh riêng)
+    'Bánh mì thịt': 'https://images.unsplash.com/photo-1550317138-10000687a72b?w=400&h=400&fit=crop',
+    'Cơm gà': 'https://images.unsplash.com/photo-1544025162-d76694265947?w=400&h=400&fit=crop',
+    'Mì xào bò': 'https://images.unsplash.com/photo-1544025162-8e8d44d6f8d1?w=400&h=400&fit=crop',
+    'Gà rán': 'https://images.unsplash.com/photo-1604908812713-9b1d565a1e5f?w=400&h=400&fit=crop',
+    'Khoai tây chiên': 'https://images.unsplash.com/photo-1541698444083-023c97d3f4b6?w=400&h=400&fit=crop',
+    'Salad rau trộn': 'https://images.unsplash.com/photo-1551183053-bf91a1d81141?w=400&h=400&fit=crop',
+    'Phở bò': 'https://images.unsplash.com/photo-1543353071-10c8ba85a904?w=400&h=400&fit=crop',
+    'Bún chả': 'https://images.unsplash.com/photo-1617195737496-2dfc9c2b63a3?w=400&h=400&fit=crop',
+    'Cơm tấm sườn': 'https://images.unsplash.com/photo-1598866594230-2f1b98e65ce0?w=400&h=400&fit=crop',
+    'Bánh mì ốp la': 'https://images.unsplash.com/photo-1525351484163-7529414344d8?w=400&h=400&fit=crop',
+    'Mì xào hải sản': 'https://images.unsplash.com/photo-1525755662778-989d0524087e?w=400&h=400&fit=crop',
+    'Salad Caesar': 'https://images.unsplash.com/photo-1568605114967-8130f3a36994?w=400&h=400&fit=crop'
 };
+
+// Function to normalize text (remove Vietnamese diacritics and lowercase)
+function normalizeText(text) {
+    return (text || '')
+        .toString()
+        .normalize('NFD')
+        .replace(/\p{Diacritic}+/gu, '')
+        .toLowerCase();
+}
+
+// Keyword-based image resolver to cover all names
+function getImageByKeywords(name, category) {
+    const n = normalizeText(name);
+
+    // Coffee
+    if (category === 'coffee' || /(ca phe|espresso|americano|latte|cappuccino|macchiato|mocha|phin|nau|sua|da xay|frappuccino)/.test(n)) {
+        if (/espresso/.test(n)) return 'https://images.unsplash.com/photo-1579992357154-faf4bde95b3d?w=400&h=400&fit=crop';
+        if (/americano/.test(n)) return 'https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?w=400&h=400&fit=crop';
+        if (/latte/.test(n)) return 'https://images.unsplash.com/photo-1561882468-9110e03e0f78?w=400&h=400&fit=crop';
+        if (/cappuccino/.test(n)) return 'https://images.unsplash.com/photo-1557006021-b85faa2bc5e2?w=400&h=400&fit=crop';
+        if (/macchiato/.test(n)) return 'https://images.unsplash.com/photo-1557772611-722dabe20327?w=400&h=400&fit=crop';
+        if (/mocha/.test(n)) return 'https://images.unsplash.com/photo-1529078155058-5d716f45d604?w=400&h=400&fit=crop';
+        if (/(da xay|frappuccino)/.test(n)) return 'https://images.unsplash.com/photo-1572490122747-3968b75cc699?w=400&h=400&fit=crop';
+        if (/(sua|nau)/.test(n)) return 'https://images.unsplash.com/photo-1517487881594-2787fef5ebf7?w=400&h=400&fit=crop';
+        if (/(phin|den)/.test(n)) return 'https://images.unsplash.com/photo-1509042239860-f550ce710b93?w=400&h=400&fit=crop';
+        return 'https://images.unsplash.com/photo-1509042239860-f550ce710b93?w=400&h=400&fit=crop';
+    }
+
+    // Tea & Milk Tea
+    if (category === 'tea' || /(tra sua|matcha|thai|tra den|tra xanh|hoa cuc|socola|duong den|tran chau|bubble tea)/.test(n)) {
+        if (/matcha/.test(n)) return 'https://images.unsplash.com/photo-1515823064-d6e0c04616a7?w=400&h=400&fit=crop';
+        if (/thai/.test(n)) return 'https://images.unsplash.com/photo-1558857563-8b2e097d42bb?w=400&h=400&fit=crop';
+        if (/socola/.test(n)) return 'https://images.unsplash.com/photo-1578374173703-00af2a8bf578?w=400&h=400&fit=crop';
+        if (/(duong den|tran chau|bubble tea|tra sua)/.test(n)) return 'https://images.unsplash.com/photo-1525385133512-2f3bdd039054?w=400&h=400&fit=crop';
+        if (/tra den/.test(n)) return 'https://images.unsplash.com/photo-1556679343-c7306c1976bc?w=400&h=400&fit=crop';
+        if (/tra xanh/.test(n)) return 'https://images.unsplash.com/photo-1564890369478-c89ca6d9cde9?w=400&h=400&fit=crop';
+        if (/hoa cuc/.test(n)) return 'https://images.unsplash.com/photo-1597318209582-7b583b6f079f?w=400&h=400&fit=crop';
+        return 'https://images.unsplash.com/photo-1558160074-4d7d8bdf4256?w=400&h=400&fit=crop';
+    }
+
+    // Smoothie
+    if (category === 'smoothie' || /(sinh to|smoothie|shake)/.test(n)) {
+        if (/bo/.test(n)) return 'https://images.unsplash.com/photo-1623065422902-30a2d299bbe4?w=400&h=400&fit=crop';
+        if (/(dau tay|dau)/.test(n)) return 'https://images.unsplash.com/photo-1553530666-ba11a7da3888?w=400&h=400&fit=crop';
+        if (/xoai/.test(n)) return 'https://images.unsplash.com/photo-1600101804734-2da3c7c08938?w=400&h=400&fit=crop';
+        if (/chuoi/.test(n)) return 'https://images.unsplash.com/photo-1638176066666-ffb2f013c7dd?w=400&h=400&fit=crop';
+        if (/dua(?! hau)/.test(n)) return 'https://images.unsplash.com/photo-1534353436294-0dbd4bdac845?w=400&h=400&fit=crop';
+        if (/kiwi/.test(n)) return 'https://images.unsplash.com/photo-1619566636857-23d0083b9f55?w=400&h=400&fit=crop';
+        if (/(rau xanh|green)/.test(n)) return 'https://images.unsplash.com/photo-1610970881699-44a5587cabec?w=400&h=400&fit=crop';
+        return 'https://images.unsplash.com/photo-1505252585461-04db1eb84625?w=400&h=400&fit=crop';
+    }
+
+    // Juice
+    if (category === 'juice' || /(nuoc ep|juice)/.test(n)) {
+        if (/cam/.test(n)) return 'https://images.unsplash.com/photo-1600271886742-f049cd451bba?w=400&h=400&fit=crop';
+        if (/tao/.test(n)) return 'https://images.unsplash.com/photo-1576673442212-744f7cb002b6?w=400&h=400&fit=crop';
+        if (/(dua hau)/.test(n)) return 'https://images.unsplash.com/photo-1629194303177-d5d3a3f2e17f?w=400&h=400&fit=crop';
+        if (/(ca rot)/.test(n)) return 'https://images.unsplash.com/photo-1600281877611-16f03b0c0ceb?w=400&h=400&fit=crop';
+        if (/(ca chua)/.test(n)) return 'https://images.unsplash.com/photo-1563636619-e9143da7973b?w=400&h=400&fit=crop';
+        if (/dua/.test(n)) return 'https://images.unsplash.com/photo-1587574293340-e0011c34e8f1?w=400&h=400&fit=crop';
+        if (/oi/.test(n)) return 'https://images.unsplash.com/photo-1566843972141-883c6dd85f06?w=400&h=400&fit=crop';
+        if (/nho/.test(n)) return 'https://images.unsplash.com/photo-1540132328-79bd2b6a1a9b?w=400&h=400&fit=crop';
+        return 'https://images.unsplash.com/photo-1600271886742-f049cd451bba?w=400&h=400&fit=crop';
+    }
+
+    // Food
+    if (category === 'food' || /(banh mi|com|mi xao|ga ran|khoai tay chien|salad|pho|bun cha|op la|hai san|caesar)/.test(n)) {
+        if (/banh mi/.test(n) && /op la/.test(n)) return 'https://images.unsplash.com/photo-1525351484163-7529414344d8?w=400&h=400&fit=crop';
+        if (/banh mi/.test(n)) return 'https://images.unsplash.com/photo-1550317138-10000687a72b?w=400&h=400&fit=crop';
+        if (/(com ga)/.test(n)) return 'https://images.unsplash.com/photo-1544025162-d76694265947?w=400&h=400&fit=crop';
+        if (/(mi xao hai san)/.test(n)) return 'https://images.unsplash.com/photo-1525755662778-989d0524087e?w=400&h=400&fit=crop';
+        if (/(mi xao|xao bo)/.test(n)) return 'https://images.unsplash.com/photo-1544025162-8e8d44d6f8d1?w=400&h=400&fit=crop';
+        if (/(ga ran)/.test(n)) return 'https://images.unsplash.com/photo-1604908812713-9b1d565a1e5f?w=400&h=400&fit=crop';
+        if (/(khoai tay chien)/.test(n)) return 'https://images.unsplash.com/photo-1541698444083-023c97d3f4b6?w=400&h=400&fit=crop';
+        if (/(salad caesar)/.test(n)) return 'https://images.unsplash.com/photo-1568605114967-8130f3a36994?w=400&h=400&fit=crop';
+        if (/(salad)/.test(n)) return 'https://images.unsplash.com/photo-1551183053-bf91a1d81141?w=400&h=400&fit=crop';
+        if (/(pho bo|pho)/.test(n)) return 'https://images.unsplash.com/photo-1543353071-10c8ba85a904?w=400&h=400&fit=crop';
+        if (/(bun cha)/.test(n)) return 'https://images.unsplash.com/photo-1617195737496-2dfc9c2b63a3?w=400&h=400&fit=crop';
+        if (/(com tam|suon)/.test(n)) return 'https://images.unsplash.com/photo-1598866594230-2f1b98e65ce0?w=400&h=400&fit=crop';
+        return 'https://images.unsplash.com/photo-1540189549336-e6e99c3679fe?w=400&h=400&fit=crop';
+    }
+
+    return null;
+}
 
 // Function to get drink image URL
 function getDrinkImage(name, category) {
-    // Check if specific drink name has an image
     if (drinkImages[name]) {
         return drinkImages[name];
     }
-    
-    // Return default image based on category
+    const keywordUrl = getImageByKeywords(name, category);
+    if (keywordUrl) {
+        return keywordUrl;
+    }
     return drinkImages[`default-${category}`] || drinkImages['default-coffee'];
 }
 
@@ -1615,6 +1715,61 @@ const stores = [
     ]}
 ];
 
+// Thêm 2 cửa hàng đồ ăn cho mỗi trường (tạo động để không phải chỉnh sửa thủ công)
+(function addFoodStoresPerUniversity() {
+    // Tìm id tiếp theo cho store và item để tránh trùng
+    let nextStoreId = Math.max(...stores.map(s => s.id)) + 1;
+    let nextItemId = Math.max(...stores.flatMap(s => s.menu.map(m => m.id))) + 1;
+
+    universities.forEach(u => {
+        const baseLocation = `Gần ${u.shortName || u.name}`;
+
+        // Hai menu khác nhau để đa dạng món và ảnh
+        const menuA = [
+            { id: nextItemId++, name: "Bánh mì thịt", price: 25000, description: "Bánh mì Việt Nam truyền thống", category: "food" },
+            { id: nextItemId++, name: "Cơm gà", price: 38000, description: "Cơm gà xé, sốt mặn ngọt", category: "food" },
+            { id: nextItemId++, name: "Mì xào bò", price: 42000, description: "Mì xào bò rau củ", category: "food" },
+            { id: nextItemId++, name: "Gà rán", price: 45000, description: "Đùi gà rán giòn", category: "food" },
+            { id: nextItemId++, name: "Khoai tây chiên", price: 22000, description: "Khoai tây chiên vàng giòn", category: "food" },
+            { id: nextItemId++, name: "Salad rau trộn", price: 32000, description: "Rau xanh, sốt chua ngọt", category: "food" }
+        ];
+
+        const menuB = [
+            { id: nextItemId++, name: "Phở bò", price: 45000, description: "Phở bò tái chín", category: "food" },
+            { id: nextItemId++, name: "Bún chả", price: 40000, description: "Bún chả Hà Nội", category: "food" },
+            { id: nextItemId++, name: "Cơm tấm sườn", price: 42000, description: "Cơm tấm sườn bì chả", category: "food" },
+            { id: nextItemId++, name: "Bánh mì ốp la", price: 25000, description: "Bánh mì trứng ốp la", category: "food" },
+            { id: nextItemId++, name: "Mì xào hải sản", price: 48000, description: "Mì xào tôm mực", category: "food" },
+            { id: nextItemId++, name: "Salad Caesar", price: 35000, description: "Romaine, gà xé, sốt Caesar", category: "food" }
+        ];
+
+        // Tên cửa hàng khác nhau theo trường và loại
+        const foodStore1 = {
+            id: nextStoreId++,
+            name: `Quán Cơm ${u.shortName || u.name}`,
+            description: "Cơm - mì - salad ngon, nhanh, giá sinh viên",
+            rating: 4.5,
+            deliveryTime: "12-18 phút",
+            location: baseLocation,
+            universityId: u.id,
+            menu: menuA
+        };
+
+        const foodStore2 = {
+            id: nextStoreId++,
+            name: `Ăn Vặt ${u.shortName || u.name}`,
+            description: "Món Việt quen thuộc, no bụng mỗi ngày",
+            rating: 4.4,
+            deliveryTime: "15-22 phút",
+            location: baseLocation,
+            universityId: u.id,
+            menu: menuB
+        };
+
+        stores.push(foodStore1, foodStore2);
+    });
+})();
+
 // Telegram Bot Configuration - Sử dụng environment variables trên Vercel
 // TELEGRAM_BOT_TOKEN và TELEGRAM_CHAT_ID được cấu hình trong Vercel dashboard
 
@@ -1633,6 +1788,12 @@ function renderUniversities() {
         const universityCard = document.createElement('div');
         universityCard.className = 'university-card';
         universityCard.onclick = () => selectUniversity(university);
+
+        // Tính số cửa hàng hiển thị: tối đa 3 đồ uống + 2 đồ ăn
+        const uniStores = stores.filter(store => store.universityId === university.id);
+        const drinkStoresCount = uniStores.filter(s => !s.menu.every(i => i.category === 'food')).length;
+        const foodStoresCount = uniStores.filter(s => s.menu.every(i => i.category === 'food')).length;
+        const visibleStoreCount = Math.min(3, drinkStoresCount) + Math.min(2, foodStoresCount);
         
         universityCard.innerHTML = `
             <div class="university-icon">
@@ -1647,7 +1808,7 @@ function renderUniversities() {
                         <div>Sinh viên</div>
                     </div>
                     <div class="stat-item">
-                        <div class="stat-number">${university.storeCount}</div>
+                        <div class="stat-number">${visibleStoreCount}</div>
                         <div>Cửa hàng</div>
                     </div>
                     <div class="stat-item">
@@ -1687,8 +1848,12 @@ function renderStores() {
 
     // Filter stores by selected university
     const filteredStores = stores.filter(store => store.universityId === currentUniversity.id);
+    // Ưu tiên 3 cửa hàng đồ uống + 2 cửa hàng đồ ăn (nếu có)
+    const drinkStores = filteredStores.filter(s => !s.menu.every(i => i.category === 'food'));
+    const foodStores = filteredStores.filter(s => s.menu.every(i => i.category === 'food'));
+    const limitedStores = [...drinkStores.slice(0, 3), ...foodStores.slice(0, 2)];
 
-    filteredStores.forEach(store => {
+    limitedStores.forEach(store => {
         const storeCard = document.createElement('div');
         storeCard.className = 'store-card';
         storeCard.onclick = () => selectStore(store);

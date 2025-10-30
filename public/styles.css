@@ -187,8 +187,9 @@ body::before {
     backdrop-filter: blur(10px);
     padding: 20px 30px;
     border-radius: 20px;
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+    box-shadow: above Viitattu 8px 32px rgba(0, 0, 0, 0.1);
     margin-bottom: 30px;
+    position: relative;
 }
 
 .logo {
@@ -233,6 +234,23 @@ body::before {
     background-clip: text;
     animation: floatUpDown 2s ease-in-out infinite;
     animation-delay: calc(var(--i) * 0.1s);
+}
+
+.slogan {
+    flex: 1;
+    text-align: center;
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    pointer-events: none;
+}
+
+.slogan p {
+    font-size: 1.5rem;
+    font-weight: 500;
+    color: #667eea;
+    margin: 0;
+    opacity: 0.85;
 }
 
 @keyframes floatUpDown {
@@ -1167,6 +1185,10 @@ body::before {
         font-size: 1.5rem;
     }
     
+    .slogan p {
+        font-size: 0.85rem;
+    }
+    
     .store-grid {
         grid-template-columns: 1fr;
     }
@@ -1191,6 +1213,10 @@ body::before {
 }
 
 @media (max-width: 480px) {
+    .slogan {
+        display: none;
+    }
+    
     .menu-categories {
         justify-content: center;
     }
