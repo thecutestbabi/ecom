@@ -129,9 +129,12 @@ function formatOrderMessage(order) {
     
     // Thêm phương thức thanh toán
     if (order.paymentMethod === 'transfer') {
-        message += `💳 <b>Phương thức:</b> Chuyển khoản (ảnh xác nhận sẽ được gửi riêng)\n`;
+        message += `💳 <b>Phương thức:</b> Chuyển khoản ✅\n`;
+        if (order.paymentScreenshot) {
+            message += `📸 <b>Trạng thái:</b> Đã gửi kèm ảnh xác nhận\n`;
+        }
     } else {
-        message += `💳 <b>Phương thức:</b> Tiền mặt khi nhận hàng\n`;
+        message += `💳 <b>Phương thức:</b> Thanh toán khi nhận hàng (COD)\n`;
     }
     
     message += `⏰ <b>Thời gian:</b> ${order.timestamp}`;
