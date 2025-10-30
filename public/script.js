@@ -302,11 +302,11 @@ const universities = [
     },
     {
         id: 12,
-        name: "Đại học Sư Phạm Thể Dục Thể Thao ",
+        name: "Đại học Thủ Đô Hà Nội ",
         shortName: "UST",
         icon: "🏃",
-        logo: "logos/ust.png",
-        description: "Trường đại học thể thao và du lịch",
+        logo: "logos/ust.jpg",
+        description: "Trường đại học thủ đô Hà Nội",
         studentCount: "10,000+",
         storeCount: "6",
         location: "Từ Liêm, Hà Nội"
@@ -2184,14 +2184,25 @@ function convertFileToBase64(file) {
 // Handle payment method change
 document.addEventListener('DOMContentLoaded', function() {
     const paymentMethods = document.querySelectorAll('input[name="paymentMethod"]');
+    const transferInfo = document.getElementById('transferPaymentInfo');
+    const screenshotInput = document.getElementById('paymentScreenshot');
+    
+    // Khởi tạo: ẩn phần chuyển khoản nếu COD và bỏ required ảnh
+    if (document.querySelector('input[name="paymentMethod"]:checked')?.value !== 'transfer') {
+        if (transferInfo) transferInfo.style.display = 'none';
+        if (screenshotInput) screenshotInput.required = false;
+    }
     
     paymentMethods.forEach(method => {
         method.addEventListener('change', function() {
-            const transferInfo = document.getElementById('transferPaymentInfo');
+            if (!transferInfo || !screenshotInput) return;
             if (this.value === 'transfer') {
                 transferInfo.style.display = 'block';
+                screenshotInput.required = true;
             } else {
                 transferInfo.style.display = 'none';
+                screenshotInput.required = false;
+                screenshotInput.value = '';
             }
         });
     });
@@ -2254,6 +2265,8 @@ document.getElementById('checkoutForm').addEventListener('submit', async functio
     
     // Show success modal
     document.getElementById('successModal').classList.add('show');
+    // Trigger fireworks effect (10s)
+    startFireworks(15000);
     
     // Show additional info if Telegram failed
     if (!telegramSuccess) {
@@ -2270,6 +2283,97 @@ document.getElementById('checkoutForm').addEventListener('submit', async functio
     // Reset form
     document.getElementById('checkoutForm').reset();
 });
+
+// Fireworks effect
+let fireworksRaf = null;
+function startFireworks(durationMs = 3000) {
+    const canvas = document.getElementById('fireworksCanvas');
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    const dpr = window.devicePixelRatio || 1;
+    const resize = () => {
+        canvas.width = Math.floor(window.innerWidth * dpr);
+        canvas.height = Math.floor(window.innerHeight * dpr);
+        canvas.style.width = '100vw';
+        canvas.style.height = '100vh';
+        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    };
+    resize();
+    window.addEventListener('resize', resize, { passive: true });
+    canvas.style.display = 'block';
+
+    const gravity = 0.04;
+    const friction = 0.985;
+    const particles = [];
+
+    function spawnBurst(cx, cy) {
+        const count = 50 + Math.floor(Math.random() * 30);
+        const hue = Math.floor(Math.random() * 360);
+        for (let i = 0; i < count; i++) {
+            const angle = (Math.PI * 2 * i) / count;
+            const speed = 2 + Math.random() * 3.5;
+            particles.push({
+                x: cx,
+                y: cy,
+                vx: Math.cos(angle) * speed,
+                vy: Math.sin(angle) * speed,
+                life: 60 + Math.random() * 40,
+                color: `hsl(${(hue + Math.random() * 60) % 360} 100% 60%)`,
+                size: 2 + Math.random() * 2
+            });
+        }
+    }
+
+    // initial bursts
+    const spawnRandom = () => {
+        const cx = Math.random() * window.innerWidth;
+        const cy = Math.random() * window.innerHeight * 0.6;
+        spawnBurst(cx, cy);
+    };
+    for (let i = 0; i < 3; i++) spawnRandom();
+
+    const startTime = performance.now();
+
+    function tick(now) {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        // Occasionally spawn more bursts within first 2 seconds
+        if (now - startTime < 2000 && Math.random() < 0.06) spawnRandom();
+
+        for (let i = particles.length - 1; i >= 0; i--) {
+            const p = particles[i];
+            p.vx *= friction;
+            p.vy = p.vy * friction + gravity;
+            p.x += p.vx;
+            p.y += p.vy;
+            p.life -= 1;
+
+            ctx.globalCompositeOperation = 'lighter';
+            ctx.fillStyle = p.color;
+            ctx.beginPath();
+            ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+            ctx.fill();
+
+            if (p.life <= 0) particles.splice(i, 1);
+        }
+
+        if (now - startTime < durationMs || particles.length > 0) {
+            fireworksRaf = requestAnimationFrame(tick);
+        } else {
+            stopFireworks();
+        }
+    }
+
+    cancelAnimationFrame(fireworksRaf);
+    fireworksRaf = requestAnimationFrame(tick);
+
+    function stopFireworks() {
+        cancelAnimationFrame(fireworksRaf);
+        canvas.style.display = 'none';
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        window.removeEventListener('resize', resize);
+    }
+}
 
 // Send order to Telegram via API route
 async function sendToTelegram(order) {
