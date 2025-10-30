@@ -43,12 +43,6 @@ export default async function handler(req, res) {
             console.log('Attempting to send payment screenshot to Telegram...');
             
             try {
-                // Lấy base64 data (bỏ prefix "data:image/...;base64,")
-                const base64Data = order.paymentScreenshot.split(',')[1];
-                
-                // Convert base64 thành buffer
-                const imageBuffer = Buffer.from(base64Data, 'base64');
-                
                 // Format caption với thông tin đơn hàng
                 const photoCaption = `📸 <b>XÁC NHẬN CHUYỂN KHOẢN</b>\n\n` +
                     `👤 <b>Khách hàng:</b> ${order.customer.name}\n` +
@@ -57,21 +51,22 @@ export default async function handler(req, res) {
                     `🏪 <b>Cửa hàng:</b> ${order.store}\n` +
                     `⏰ <b>Thời gian:</b> ${order.timestamp}`;
 
-                // Tạo FormData để gửi file
-                const FormData = require('form-data');
-                const formData = new FormData();
-                formData.append('chat_id', CHAT_ID);
-                formData.append('photo', imageBuffer, {
-                    filename: `payment_${Date.now()}.jpg`,
-                    contentType: 'image/jpeg'
-                });
-                formData.append('caption', photoCaption);
-                formData.append('parse_mode', 'HTML');
+                // Gửi text message với link tới ảnh thay vì gửi ảnh trực tiếp
+                const messageWithPhoto = `${photoCaption}\n\n` +
+                    `🔗 <b>Xem ảnh chuyển khoản:</b>\n` +
+                    `<a href="${order.paymentScreenshot}">Click để xem ảnh</a>`;
 
-                const photoResponse = await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendPhoto`, {
+                const photoResponse = await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
                     method: 'POST',
-                    body: formData,
-                    headers: formData.getHeaders()
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        chat_id: CHAT_ID,
+                        text: messageWithPhoto,
+                        parse_mode: 'HTML',
+                        disable_web_page_preview: false
+                    })
                 });
 
                 const photoResult = await photoResponse.json();
