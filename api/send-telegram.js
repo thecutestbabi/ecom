@@ -40,6 +40,7 @@ export default async function handler(req, res) {
 
         // Gửi ảnh chuyển khoản nếu có
         if (order.paymentMethod === 'transfer' && order.paymentScreenshot) {
+            console.log('Attempting to send payment screenshot to Telegram...');
             try {
                 // Format caption với thông tin đơn hàng
                 const photoCaption = `📸 <b>XÁC NHẬN CHUYỂN KHOẢN</b>\n\n` +
@@ -65,10 +66,14 @@ export default async function handler(req, res) {
                 if (!photoResponse.ok) {
                     const photoError = await photoResponse.json();
                     console.error('Failed to send photo to Telegram:', photoError);
+                } else {
+                    console.log('Payment screenshot sent successfully to Telegram');
                 }
             } catch (photoError) {
                 console.error('Error sending photo to Telegram:', photoError);
             }
+        } else {
+            console.log('No payment screenshot to send (payment method or screenshot missing)');
         }
 
         if (!telegramResponse.ok) {
