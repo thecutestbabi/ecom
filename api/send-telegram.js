@@ -41,6 +41,8 @@ export default async function handler(req, res) {
         // Gửi ảnh chuyển khoản nếu có
         if (order.paymentMethod === 'transfer' && order.paymentScreenshot) {
             console.log('Attempting to send payment screenshot to Telegram...');
+            console.log('Screenshot size:', order.paymentScreenshot.length, 'characters');
+            
             try {
                 // Format caption với thông tin đơn hàng
                 const photoCaption = `📸 <b>XÁC NHẬN CHUYỂN KHOẢN</b>\n\n` +
@@ -63,14 +65,50 @@ export default async function handler(req, res) {
                     })
                 });
 
+                const photoResult = await photoResponse.json();
+                
                 if (!photoResponse.ok) {
-                    const photoError = await photoResponse.json();
-                    console.error('Failed to send photo to Telegram:', photoError);
+                    console.error('Failed to send photo to Telegram:', photoResult);
+                    
+                    // Gửi thông báo lỗi qua text message
+                    await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({
+                            chat_id: CHAT_ID,
+                            text: `⚠️ <b>LỖI GỬI ẢNH CHUYỂN KHOẢN</b>\n\n` +
+                                  `Không thể gửi ảnh cho đơn hàng của: ${order.customer.name}\n` +
+                                  `Lỗi: ${photoResult.description || 'Unknown error'}\n\n` +
+                                  `Vui lòng yêu cầu khách hàng gửi lại ảnh qua SĐT: ${order.customer.phone}`,
+                            parse_mode: 'HTML'
+                        })
+                    });
                 } else {
                     console.log('Payment screenshot sent successfully to Telegram');
                 }
             } catch (photoError) {
                 console.error('Error sending photo to Telegram:', photoError);
+                
+                // Gửi thông báo lỗi
+                try {
+                    await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({
+                            chat_id: CHAT_ID,
+                            text: `⚠️ <b>LỖI NGHIÊM TRỌNG KHI GỬI ẢNH</b>\n\n` +
+                                  `Đơn hàng: ${order.customer.name} - ${order.customer.phone}\n` +
+                                  `Lỗi: ${photoError.message}`,
+                            parse_mode: 'HTML'
+                        })
+                    });
+                } catch (e) {
+                    console.error('Failed to send error notification:', e);
+                }
             }
         } else {
             console.log('No payment screenshot to send (payment method or screenshot missing)');
