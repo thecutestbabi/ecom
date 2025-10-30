@@ -41,9 +41,14 @@ export default async function handler(req, res) {
         // Gửi ảnh chuyển khoản nếu có
         if (order.paymentMethod === 'transfer' && order.paymentScreenshot) {
             console.log('Attempting to send payment screenshot to Telegram...');
-            console.log('Screenshot size:', order.paymentScreenshot.length, 'characters');
             
             try {
+                // Lấy base64 data (bỏ prefix "data:image/...;base64,")
+                const base64Data = order.paymentScreenshot.split(',')[1];
+                
+                // Convert base64 thành buffer
+                const imageBuffer = Buffer.from(base64Data, 'base64');
+                
                 // Format caption với thông tin đơn hàng
                 const photoCaption = `📸 <b>XÁC NHẬN CHUYỂN KHOẢN</b>\n\n` +
                     `👤 <b>Khách hàng:</b> ${order.customer.name}\n` +
@@ -52,17 +57,21 @@ export default async function handler(req, res) {
                     `🏪 <b>Cửa hàng:</b> ${order.store}\n` +
                     `⏰ <b>Thời gian:</b> ${order.timestamp}`;
 
+                // Tạo FormData để gửi file
+                const FormData = require('form-data');
+                const formData = new FormData();
+                formData.append('chat_id', CHAT_ID);
+                formData.append('photo', imageBuffer, {
+                    filename: `payment_${Date.now()}.jpg`,
+                    contentType: 'image/jpeg'
+                });
+                formData.append('caption', photoCaption);
+                formData.append('parse_mode', 'HTML');
+
                 const photoResponse = await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendPhoto`, {
                     method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        chat_id: CHAT_ID,
-                        photo: order.paymentScreenshot,
-                        caption: photoCaption,
-                        parse_mode: 'HTML'
-                    })
+                    body: formData,
+                    headers: formData.getHeaders()
                 });
 
                 const photoResult = await photoResponse.json();
