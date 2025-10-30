@@ -927,6 +927,58 @@ body::before {
     border-color: #667eea;
 }
 
+/* Payment Methods */
+.payment-methods {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.payment-option {
+    display: flex;
+    align-items: baseline;
+    padding: 15px;
+    border: 2px solid #e9ecef;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.payment-option:hover {
+    border-color: #667eea;
+    background: rgba(102, 126, 234, 0.05);
+}
+
+.payment-option input[type="radio"] {
+    width: 18px;
+    height: 18px;
+    margin: 0;
+    margin-right: 12px;
+    cursor: pointer;
+    accent-color: #667eea;
+    position: relative;
+    top: 3px;
+}
+
+.payment-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 1rem;
+    color: #333;
+    cursor: pointer;
+}
+
+.payment-label i {
+    color: #667eea;
+    font-size: 1rem;
+}
+
+.payment-option input[type="radio"]:checked + .payment-label {
+    color: #667eea;
+    font-weight: 600;
+}
+
 .form-actions {
     display: flex;
     gap: 15px;
