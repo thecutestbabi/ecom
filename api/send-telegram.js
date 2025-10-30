@@ -43,7 +43,11 @@ export default async function handler(req, res) {
             console.log('Attempting to send payment screenshot to Telegram...');
             
             try {
-                // Format caption với thông tin đơn hàng
+                // Chuyển base64 thành Buffer
+                const base64Data = order.paymentScreenshot.replace(/^data:image\/\w+;base64,/, '');
+                const imageBuffer = Buffer.from(base64Data, 'base64');
+                
+                // Tạo caption cho ảnh
                 const photoCaption = `📸 <b>XÁC NHẬN CHUYỂN KHOẢN</b>\n\n` +
                     `👤 <b>Khách hàng:</b> ${order.customer.name}\n` +
                     `📞 <b>SĐT:</b> ${order.customer.phone}\n` +
@@ -51,22 +55,19 @@ export default async function handler(req, res) {
                     `🏪 <b>Cửa hàng:</b> ${order.store}\n` +
                     `⏰ <b>Thời gian:</b> ${order.timestamp}`;
 
-                // Gửi text message với link tới ảnh thay vì gửi ảnh trực tiếp
-                const messageWithPhoto = `${photoCaption}\n\n` +
-                    `🔗 <b>Xem ảnh chuyển khoản:</b>\n` +
-                    `<a href="${order.paymentScreenshot}">Click để xem ảnh</a>`;
+                // Tạo FormData để gửi ảnh
+                const formData = new FormData();
+                formData.append('chat_id', CHAT_ID);
+                formData.append('caption', photoCaption);
+                formData.append('parse_mode', 'HTML');
+                
+                // Tạo Blob từ Buffer
+                const blob = new Blob([imageBuffer], { type: 'image/jpeg' });
+                formData.append('photo', blob, 'payment-screenshot.jpg');
 
-                const photoResponse = await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
+                const photoResponse = await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendPhoto`, {
                     method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        chat_id: CHAT_ID,
-                        text: messageWithPhoto,
-                        parse_mode: 'HTML',
-                        disable_web_page_preview: false
-                    })
+                    body: formData
                 });
 
                 const photoResult = await photoResponse.json();
@@ -173,7 +174,7 @@ function formatOrderMessage(order) {
     if (order.paymentMethod === 'transfer') {
         message += `💳 <b>Phương thức:</b> Chuyển khoản ✅\n`;
         if (order.paymentScreenshot) {
-            message += `📸 <b>Trạng thái:</b> Đã gửi kèm ảnh xác nhận\n`;
+            message += `📸 <b>Trạng thái:</b> Khách đã upload ảnh xác nhận (xem tin nhắn tiếp theo)\n`;
         }
     } else {
         message += `💳 <b>Phương thức:</b> Thanh toán khi nhận hàng (COD)\n`;
