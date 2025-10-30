@@ -2274,7 +2274,8 @@ document.getElementById('checkoutForm').addEventListener('submit', async functio
 // Send order to Telegram via API route
 async function sendToTelegram(order) {
     try {
-        const response = await fetch('/api/send-telegram.js', {
+        // Gọi API không kèm đuôi .js để tương thích Vercel
+        const response = await fetch('/api/send-telegram', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
