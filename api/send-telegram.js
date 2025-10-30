@@ -41,6 +41,14 @@ export default async function handler(req, res) {
         // Gửi ảnh chuyển khoản nếu có
         if (order.paymentMethod === 'transfer' && order.paymentScreenshot) {
             try {
+                // Format caption với thông tin đơn hàng
+                const photoCaption = `📸 <b>XÁC NHẬN CHUYỂN KHOẢN</b>\n\n` +
+                    `👤 <b>Khách hàng:</b> ${order.customer.name}\n` +
+                    `📞 <b>SĐT:</b> ${order.customer.phone}\n` +
+                    `💰 <b>Số tiền:</b> ${formatPrice(order.total)}\n` +
+                    `🏪 <b>Cửa hàng:</b> ${order.store}\n` +
+                    `⏰ <b>Thời gian:</b> ${order.timestamp}`;
+
                 const photoResponse = await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendPhoto`, {
                     method: 'POST',
                     headers: {
@@ -49,12 +57,14 @@ export default async function handler(req, res) {
                     body: JSON.stringify({
                         chat_id: CHAT_ID,
                         photo: order.paymentScreenshot,
-                        caption: `📸 Ảnh xác nhận chuyển khoản từ khách hàng: ${order.customer.name}`
+                        caption: photoCaption,
+                        parse_mode: 'HTML'
                     })
                 });
 
                 if (!photoResponse.ok) {
-                    console.error('Failed to send photo to Telegram');
+                    const photoError = await photoResponse.json();
+                    console.error('Failed to send photo to Telegram:', photoError);
                 }
             } catch (photoError) {
                 console.error('Error sending photo to Telegram:', photoError);
