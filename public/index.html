@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Đặt Đồ Uống - Giao Hàng Tận Nơi</title>
+    <title>SillyFood</title>
     <link rel="stylesheet" href="styles.css">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -23,17 +23,6 @@
         <div class="floating-icon">🍉</div>
     </div>
 
-    <div class="bouncing-beans">
-        <div class="bouncing-bean">☕</div>
-        <div class="bouncing-bean">☕</div>
-        <div class="bouncing-bean">☕</div>
-        <div class="bouncing-bean">☕</div>
-        <div class="bouncing-bean">☕</div>
-        <div class="bouncing-bean">☕</div>
-        <div class="bouncing-bean">☕</div>
-        <div class="bouncing-bean">☕</div>
-        <div class="bouncing-bean">☕</div>
-    </div>
 
     <div class="floating-bubbles">
         <div class="bubble"></div>
@@ -76,7 +65,9 @@
         <header class="header">
             <div class="logo">
                 <i class="fas fa-coffee"></i>
-                <h1>DrinkHub</h1>
+                <h1>
+                    <span style="--i:1">S</span><span style="--i:2">i</span><span style="--i:3">l</span><span style="--i:4">l</span><span style="--i:5">y</span><span style="--i:6">F</span><span style="--i:7">o</span><span style="--i:8">o</span><span style="--i:9">d</span>
+                </h1>
             </div>
             <div class="cart-icon" onclick="toggleCart()">
                 <i class="fas fa-shopping-cart"></i>
@@ -140,9 +131,19 @@
                 <!-- Cart items will be populated by JavaScript -->
             </div>
             <div class="cart-footer">
-                <div class="cart-total">
-                    <span>Tổng cộng:</span>
-                    <span id="cartTotal">0 ₫</span>
+                <div class="cart-summary">
+                    <div class="cart-summary-row">
+                        <span>Tạm tính:</span>
+                        <span id="cartSubtotal">0 ₫</span>
+                    </div>
+                    <div class="cart-summary-row">
+                        <span>Phí ship:</span>
+                        <span id="shippingFee">0 ₫</span>
+                    </div>
+                    <div class="cart-total">
+                        <span>Tổng cộng:</span>
+                        <span id="cartTotal">0 ₫</span>
+                    </div>
                 </div>
                 <button class="checkout-btn" onclick="showCheckout()">Thanh toán</button>
             </div>
@@ -174,6 +175,43 @@
                         <label for="notes">Ghi chú thêm:</label>
                         <textarea id="notes" rows="2"></textarea>
                     </div>
+                    
+                    <!-- Payment Method -->
+                    <div class="form-group">
+                        <label>Phương thức thanh toán:</label>
+                        <div class="payment-methods">
+                            <label class="payment-option">
+                                <input type="radio" name="paymentMethod" value="cash" checked>
+                                <span class="payment-label">
+                                    <i class="fas fa-hand-holding-usd"></i> Thanh toán khi nhận hàng
+                                </span>
+                            </label>
+                            <label class="payment-option">
+                                <input type="radio" name="paymentMethod" value="transfer">
+                                <span class="payment-label">
+                                    <i class="fas fa-money-bill-wave"></i> Chuyển khoản
+                                </span>
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <!-- QR Code Display & Screenshot Upload -->
+                    <div id="transferPaymentInfo" style="display: none;">
+                        <div class="form-group">
+                            <div id="qrCodeDisplay" class="qr-code-display">
+                                <img id="qrCodeImage" src="../photo/qr-code.jpg" alt="QR Code" style="max-width: 100%; height: auto; border-radius: 10px; border: 2px solid #e0e0e0; display: block; margin: 0 auto;">
+                                <p style="text-align: center; color: #667eea; margin-top: 15px; font-weight: 600;">
+                                    <i class="fas fa-qrcode"></i> Quét QR để thanh toán
+                                </p>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="paymentScreenshot">Ảnh chụp màn hình đã chuyển khoản:</label>
+                            <input type="file" id="paymentScreenshot" accept="image/*" required>
+                            <small>Vui lòng tải lên ảnh xác nhận đã chuyển khoản thành công</small>
+                        </div>
+                    </div>
+                    
                     <div class="form-actions">
                         <button type="button" class="cancel-btn" onclick="closeCheckout()">Hủy</button>
                         <button type="submit" class="submit-btn">Đặt hàng</button>

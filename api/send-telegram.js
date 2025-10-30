@@ -38,6 +38,29 @@ export default async function handler(req, res) {
             })
         });
 
+        // Gửi ảnh chuyển khoản nếu có
+        if (order.paymentMethod === 'transfer' && order.paymentScreenshot) {
+            try {
+                const photoResponse = await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendPhoto`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        chat_id: CHAT_ID,
+                        photo: order.paymentScreenshot,
+                        caption: `📸 Ảnh xác nhận chuyển khoản từ khách hàng: ${order.customer.name}`
+                    })
+                });
+
+                if (!photoResponse.ok) {
+                    console.error('Failed to send photo to Telegram');
+                }
+            } catch (photoError) {
+                console.error('Error sending photo to Telegram:', photoError);
+            }
+        }
+
         if (!telegramResponse.ok) {
             const errorData = await telegramResponse.json();
             console.error('Telegram API error:', errorData);
@@ -84,7 +107,18 @@ function formatOrderMessage(order) {
         message += `• ${item.image} ${item.name} x${item.quantity} - ${formatPrice(totalPrice)}\n`;
     });
     
-    message += `\n💰 <b>Tổng cộng:</b> ${formatPrice(order.total)}\n`;
+    message += `\n━━━━━━━━━━━━━━━━━━━━\n`;
+    message += `📦 <b>Tạm tính:</b> ${formatPrice(order.subtotal || order.total)}\n`;
+    message += `🚚 <b>Phí ship:</b> ${formatPrice(order.shippingFee || 0)}\n`;
+    message += `💰 <b>Tổng cộng:</b> ${formatPrice(order.total)}\n`;
+    
+    // Thêm phương thức thanh toán
+    if (order.paymentMethod === 'transfer') {
+        message += `💳 <b>Phương thức:</b> Chuyển khoản (ảnh xác nhận sẽ được gửi riêng)\n`;
+    } else {
+        message += `💳 <b>Phương thức:</b> Tiền mặt khi nhận hàng\n`;
+    }
+    
     message += `⏰ <b>Thời gian:</b> ${order.timestamp}`;
     
     return message;

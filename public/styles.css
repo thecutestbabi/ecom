@@ -221,10 +221,27 @@ body::before {
 .logo h1 {
     font-size: 2rem;
     font-weight: 700;
+    display: flex;
+    gap: 2px;
+}
+
+.logo h1 span {
+    display: inline-block;
     background: linear-gradient(135deg, #667eea, #764ba2);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
+    animation: floatUpDown 2s ease-in-out infinite;
+    animation-delay: calc(var(--i) * 0.1s);
+}
+
+@keyframes floatUpDown {
+    0%, 100% {
+        transform: translateY(0px);
+    }
+    50% {
+        transform: translateY(-15px);
+    }
 }
 
 .cart-icon {
@@ -345,6 +362,24 @@ body::before {
     font-size: 3rem;
     margin-bottom: 15px;
     color: #667eea;
+    width: 100px;
+    height: 100px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 15px;
+}
+
+.university-icon img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    border-radius: 10px;
+    transition: transform 0.3s ease;
+}
+
+.university-card:hover .university-icon img {
+    transform: scale(1.1);
 }
 
 .university-info h3 {
@@ -405,7 +440,7 @@ body::before {
 }
 
 .store-card {
-    background: rgba(255, 255, 255, 0.95);
+    background: white;
     backdrop-filter: blur(10px);
     border-radius: 20px;
     padding: 30px;
@@ -436,7 +471,10 @@ body::before {
 
 .store-card.selected {
     border-color: #667eea;
-    background: linear-gradient(135deg, rgba(102, 126, 234, 0.1), rgba(118, 75, 162, 0.1));
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.98), rgba(255, 255, 255, 0.95));
+    box-shadow: 0 8px 32px rgba(102, 126, 234, 0.4);
+    transform: translateY(-2px);
+    border-width: 2px;
 }
 
 .store-info h3 {
@@ -452,20 +490,41 @@ body::before {
 
 .store-meta {
     display: flex;
-    justify-content: space-between;
+    justify-content: center;
     align-items: center;
     font-size: 0.9rem;
     color: #888;
+    gap: 30px;
+}
+
+.store-meta > * {
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .rating {
     display: flex;
     align-items: center;
+    justify-content: center;
     gap: 5px;
+    flex: 1;
 }
 
 .rating i {
-    color: #ffd700;
+    color: #ffd700 !important;
+}
+
+.store-meta span {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+}
+
+.store-meta i {
+    color: #667eea;
+    font-size: 0.85rem;
 }
 
 /* Menu Section */
@@ -538,10 +597,11 @@ body::before {
 .menu-item {
     background: white;
     border-radius: 15px;
-    padding: 25px;
+    padding: 0;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
     transition: all 0.3s ease;
     border: 2px solid transparent;
+    overflow: hidden;
 }
 
 .menu-item:hover {
@@ -563,11 +623,30 @@ body::before {
     }
 }
 
+.item-image {
+    width: 100%;
+    height: 200px;
+    overflow: hidden;
+    background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+}
+
+.item-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+}
+
+.menu-item:hover .item-image img {
+    transform: scale(1.1);
+}
+
 .item-header {
     display: flex;
     justify-content: space-between;
     align-items: flex-start;
     margin-bottom: 15px;
+    padding: 20px 25px 0 25px;
 }
 
 .item-name {
@@ -587,12 +666,14 @@ body::before {
     color: #666;
     margin-bottom: 20px;
     line-height: 1.5;
+    padding: 0 25px;
 }
 
 .item-actions {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    padding: 0 25px 25px 25px;
 }
 
 .quantity-controls {
@@ -726,13 +807,29 @@ body::before {
     background: #f8f9fa;
 }
 
+.cart-summary {
+    margin-bottom: 20px;
+}
+
+.cart-summary-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 0;
+    font-size: 1rem;
+    color: #666;
+}
+
 .cart-total {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 20px;
-    font-size: 1.2rem;
-    font-weight: 600;
+    padding-top: 12px;
+    margin-top: 12px;
+    border-top: 2px solid #667eea;
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: #667eea;
 }
 
 .checkout-btn {
